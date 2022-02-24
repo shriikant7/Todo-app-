@@ -31,29 +31,51 @@ const input = form.elements.todo;
 
 //state management
 let todos = [];
-//function
+
+// render functionality
 function renderTodos(todos) {
   let todosString = ``;
   //construct
   todos.forEach((todo, index) => {
-    console.log(todo, index);
+    todosString += `
+    <li id = ${index}>
+    <input type = "checkbox"/>
+    <span>${todo.label}</span>
+    <button></button>
+    </li>
+    `;
   });
   list.innerHTML = todosString;
 }
-//function
+
+// add functionality
 function addTodo(event) {
   event.preventDefault();
   const label = input.value.trim();
   const complete = false;
-  const todo = { label: label, complete: complete };
+  const todo = { label, complete };
   todos = [...todos, todo];
   //console.log(todos);
   renderTodos(todos);
   input.value = "";
 }
-//initial fun
+function updateTodo(event) {
+  const id = Number(event.target.parentNode.getAttribute("id"));
+  const complete = event.target.checked;
+
+  todos.map((todo, index) => {
+    if (id === index) {
+      const updatedTodo = { ...todo, complete: complete };
+      return updatedTodo;
+    }
+    return todo;
+  });
+}
+
+//initial function
 function init() {
   form.addEventListener("submit", addTodo);
+  list.addEventListener("change", updateTodo);
 }
 init();
 
