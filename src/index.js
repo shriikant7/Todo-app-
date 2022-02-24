@@ -23,11 +23,23 @@ app.innerHTML = `
 `;
 
 //selectors
+const root = document.querySelector(".todos");
+const list = root.querySelector(".todos-list");
+
 const form = document.forms.todos;
 const input = form.elements.todo;
 
 //state management
 let todos = [];
+//function
+function renderTodos(todos) {
+  let todosString = ``;
+  //construct
+  todos.forEach((todo, index) => {
+    console.log(todo, index);
+  });
+  list.innerHTML = todosString;
+}
 //function
 function addTodo(event) {
   event.preventDefault();
@@ -35,7 +47,8 @@ function addTodo(event) {
   const complete = false;
   const todo = { label: label, complete: complete };
   todos = [...todos, todo];
-  console.log(todos);
+  //console.log(todos);
+  renderTodos(todos);
   input.value = "";
 }
 //initial fun
