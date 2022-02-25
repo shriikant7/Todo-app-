@@ -38,8 +38,8 @@ function renderTodos(todos) {
   //construct
   todos.forEach((todo, index) => {
     todosString += `
-    <li id = ${index}>
-    <input type = "checkbox"/>
+    <li id = ${index} ${todo.complete ? "class = 'todos-complete'" : ""}>
+    <input type = "checkbox"/ ${todo.complete ? "checked" : ""}>
     <span>${todo.label}</span>
     <button></button>
     </li>
@@ -59,17 +59,20 @@ function addTodo(event) {
   renderTodos(todos);
   input.value = "";
 }
+
 function updateTodo(event) {
   const id = Number(event.target.parentNode.getAttribute("id"));
   const complete = event.target.checked;
 
-  todos.map((todo, index) => {
+  todos = todos.map((todo, index) => {
     if (id === index) {
       const updatedTodo = { ...todo, complete: complete };
       return updatedTodo;
     }
     return todo;
   });
+  renderTodos(todos);
+  console.log(todos);
 }
 
 //initial function
