@@ -25,6 +25,7 @@ app.innerHTML = `
 //selectors
 const root = document.querySelector(".todos");
 const list = root.querySelector(".todos-list");
+const count = root.querySelector(".todos-count");
 
 const form = document.forms.todos;
 const input = form.elements.todo;
@@ -46,6 +47,7 @@ function renderTodos(todos) {
     `;
   });
   list.innerHTML = todosString;
+  count.innerText = todos.filter((todo) => !todo.complete).length;
 }
 
 // add functionality
