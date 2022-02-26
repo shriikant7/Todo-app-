@@ -26,12 +26,24 @@ app.innerHTML = `
 const root = document.querySelector(".todos");
 const list = root.querySelector(".todos-list");
 const count = root.querySelector(".todos-count");
+const clear = root.querySelector(".todos-clear");
 
 const form = document.forms.todos;
 const input = form.elements.todo;
 
 //state management
-let todos = [];
+let todos;
+
+if (JSON.parse(localStorage.getItem("todos"))) {
+  todos = JSON.parse(localStorage.getItem("todos"));
+} else {
+  todos = [];
+}
+
+//save
+function saveToStorage(todos) {
+  localStorage.setItem("todos", JSON.stringify(todos));
+}
 
 // render functionality
 function renderTodos(todos) {
@@ -48,6 +60,9 @@ function renderTodos(todos) {
   });
   list.innerHTML = todosString;
   count.innerText = todos.filter((todo) => !todo.complete).length;
+  clear.style.display = todos.filter((todo) => todo.complete).length
+    ? "block"
+    : "none";
 }
 
 // add functionality
@@ -59,9 +74,10 @@ function addTodo(event) {
   todos = [...todos, todo];
   //console.log(todos);
   renderTodos(todos);
+  saveToStorage(todos);
   input.value = "";
 }
-
+//update
 function updateTodo(event) {
   const id = Number(event.target.parentNode.getAttribute("id"));
   const complete = event.target.checked;
@@ -74,13 +90,41 @@ function updateTodo(event) {
     return todo;
   });
   renderTodos(todos);
+  saveToStorage(todos);
   console.log(todos);
+}
+//delete
+function deleteTodo(event) {
+  console.log(event.target.parentNode);
+  if (event.target.nodeName !== "BUTTON") {
+    return;
+  }
+  const id = Number(event.target.parentNode.getAttribute("id"));
+  todos = todos.filter((item, index) => index !== id);
+  console.log(todos);
+  renderTodos(todos);
+  saveToStorage(todos);
+}
+//clear
+function clearCompleteTodo() {
+  let totalCLearCount = todos.filter((todo) => todo.complete).length;
+
+  if (totalCLearCount === 0) {
+    return;
+  }
+  todos = todos.filter((todo) => !todo.complete);
+  renderTodos(todos);
+  saveToStorage(todos);
 }
 
 //initial function
 function init() {
+  saveToStorage(todos);
+  renderTodos(todos);
   form.addEventListener("submit", addTodo);
   list.addEventListener("change", updateTodo);
+  list.addEventListener("click", deleteTodo);
+  clear.addEventListener("click", clearCompleteTodo);
 }
 init();
 
